@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const Home = () => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
-
-  useEffect(() => {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/edulopes")
-      .then((resp) => resp.json())
-      .then((data) => setTodos(data))
-      .catch((error) => console.log(error));
-  }, []);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -19,20 +12,10 @@ const Home = () => {
     if (inputValue.trim() === "") return;
 
     const newTask = {
+      id: Date.now(),
       label: inputValue,
       done: false,
     };
-
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/edulopes", {
-      method: "PUT",
-      body: JSON.stringify([...todos, newTask]),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
 
     setTodos([...todos, newTask]);
     setInputValue("");
@@ -45,31 +28,17 @@ const Home = () => {
   };
 
   const deleteTodo = (id) => {
-    fetch(`https://assets.breatheco.de/apis/fake/todos/user/edulopes/${id}`, {
-      method: "DELETE",
-    })
-      .then((resp) => resp.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
-
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
   };
 
   const clearTasks = () => {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/edulopes", {
-      method: "DELETE",
-    })
-      .then((resp) => resp.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
-
     setTodos([]);
   };
 
   return (
     <div className="todo-container">
-      <h1>ToDo List</h1>
+      <h1>To Do List</h1>
       <div className="inputDiv">
         <input
           type="text"
